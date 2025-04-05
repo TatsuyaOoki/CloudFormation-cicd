@@ -9,7 +9,8 @@ phases:
       - echo Validating all templates in ./template directory...
       - |
         set -ueo pipefail
-        for file in $(find template/ -type f -name "*.yml" -o -name "*.yaml"); do
+        files=$(find template/ -type f \( -name "*.yml" -o -name "*.yaml" \))
+        for file in $files; do
           echo "Validating $file"
           aws cloudformation validate-template --template-body "file://$file"
         done
@@ -21,3 +22,4 @@ phases:
 artifacts:
   files:
     - packaged-template.yml
+    - cicd/$PARAMETER_FILE

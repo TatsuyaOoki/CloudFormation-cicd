@@ -136,6 +136,9 @@ Resources:
              - Name: TEMPLATE_BUCKET
                Type: PLAINTEXT
                Value: !Sub "${ProjectName}-${Env}-template-${AWS::AccountId}"
+             - Name: PARAMETER_FILE
+               Type: PLAINTEXT
+               Value: !Ref StackConfigFile
       Source:
         Type: CODEPIPELINE
         BuildSpec: cicd/buildspec.yml
