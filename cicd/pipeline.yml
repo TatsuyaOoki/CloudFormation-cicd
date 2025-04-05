@@ -204,7 +204,7 @@ Resources:
                 ActionMode: CHANGE_SET_REPLACE
                 ChangeSetName: !Sub "${ProjectName}-${Env}-ChangeSet"
                 StackName: !Ref StackName
-                TemplatePath: BuildOutput::cicd/packaged-template.yml
+                TemplatePath: BuildOutput::packaged-template.yml
                 Capabilities: CAPABILITY_NAMED_IAM
                 TemplateConfiguration: !Sub "BuildOutput::cicd/${StackConfigFile}"
                 RoleArn: !GetAtt PipelineRole.Arn
