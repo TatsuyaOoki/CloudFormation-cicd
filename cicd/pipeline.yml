@@ -201,7 +201,7 @@ Resources:
               InputArtifacts:
                 - Name: BuildOutput
               Configuration:
-                ActionMode: CREATE_CHANGESET
+                ActionMode: CHANGE_SET_REPLACE
                 ChangeSetName: !Sub "${ProjectName}-${Env}-ChangeSet"
                 StackName: !Ref StackName
                 TemplatePath: BuildOutput::cicd/packaged-template.yml
