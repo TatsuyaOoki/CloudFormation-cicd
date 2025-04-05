@@ -46,6 +46,15 @@ Parameters:
     Description: Name of the file in which the stack parameters are defined
     Default: param.dev.json
 
+Mappings:
+  EnvMap:
+    Prod:
+      Name: prod
+    Test:
+      Name: test
+    Dev:
+      Name: dev
+
 Resources:
 ##############################
 # S3 Bucket
@@ -53,12 +62,26 @@ Resources:
   ArtifactsBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub "${ProjectName}${Env}-artifacts-${AWS::AccountId}"
+      BucketName:
+        Fn::Sub:
+          - "${ProjectName}-${EnvLower}-artifacts-${AWS::AccountId}"
+          - EnvLower:
+              Fn::FindInMap:
+                - EnvMap
+                - Ref: Env
+                - Name
 
   TemplateBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub "${ProjectName}-${Env}-template-${AWS::AccountId}"
+      BucketName:
+        Fn::Sub:
+          - "${ProjectName}-${EnvLower}-template-${AWS::AccountId}"
+          - EnvLower:
+              Fn::FindInMap:
+                - EnvMap
+                - Ref: Env
+                - Name
 
 ##############################
 # IAM Role
