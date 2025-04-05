@@ -12,7 +12,6 @@ Metadata:
           - GitHubOwner
           - GitHubRepo
           - connectionArn
-          - ArtifactBucketName
           - StackName
 Parameters:
   ProjectName:
@@ -39,10 +38,6 @@ Parameters:
     Type: String
     NoEcho: true
     Description: CodeConnectionArn
-    Default: arn:aws:codeconnections:ap-northeast-1:123456789123:connection/xxxxx
-  ArtifactBucketName:
-    Type: String
-    Description: S3 Bucket Name for CodePipeline Artifact
   StackName:
     Type: String
     Description: Name of the CloudFormation stack to be deployed
@@ -135,7 +130,7 @@ Resources:
       PipelineType: V2
       ArtifactStore:
         Type: S3
-        Location: !Ref ArtifactBucketName
+        Location: !Ref ArtifactsBucket
       Stages:
         - Name: Source
           Actions:
