@@ -16,7 +16,8 @@ phases:
           aws cloudformation validate-template --template-body "file://$file"
         done
       - echo Packaging main template...
-      - aws cloudformation package \
+      - |
+        aws cloudformation package \
           --template-file template/main.yml \
           --s3-bucket $TEMPLATE_BUCKET \
           --output-template-file packaged-template.yml \
