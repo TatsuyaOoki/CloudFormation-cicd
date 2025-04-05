@@ -135,7 +135,7 @@ Resources:
                Value: !Ref Env
              - Name: TEMPLATE_BUCKET
                Type: PLAINTEXT
-               Value: !Sub "${ProjectName}-${Env}-template-${AWS::AccountId}"
+               Value: !Ref TemplateBucket
              - Name: PARAMETER_FILE
                Type: PLAINTEXT
                Value: !Ref StackConfigFile
@@ -204,7 +204,7 @@ Resources:
                 ActionMode: CREATE_CHANGESET
                 ChangeSetName: !Sub "${ProjectName}-${Env}-ChangeSet"
                 StackName: !Ref StackName
-                TemplatePath: BuildOutput::main.yml
+                TemplatePath: BuildOutput::cicd/packaged-template.yml
                 Capabilities: CAPABILITY_NAMED_IAM
                 TemplateConfiguration: !Sub "BuildOutput::${StackConfigFile}"
               RunOrder: 1
