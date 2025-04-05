@@ -1,0 +1,40 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Gateway resource
+Parameters:
+  ProjectName:
+    Type: String
+    Description: ProjectName
+  Env:
+    Type: String
+
+Resources:
+
+##############################
+# Internet Gateway
+##############################
+
+  InternetGateway01:
+    Type: AWS::EC2::InternetGateway
+    Properties: 
+      Tags: 
+        - Key: Name
+          Value: !Sub ${ProjectName}-${Env}-InternetGateway
+
+
+##############################
+# Gateway Attachment
+##############################
+
+  InternetGatewayAttachment01:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties: 
+      InternetGatewayId: !Ref InternetGateway01
+      VpcId: { Fn::ImportValue: !Sub "${ProjectName}-${Env}-MyVPC-Id" }
+      VpnGatewayId: !Ref AWS::NoValue
+
+Outputs:
+  InternetGateway01Id:
+    Description: The ID of the InternetGateway
+    Value: !GetAtt InternetGateway01.InternetGatewayId
+    Export:
+      Name: !Sub ${ProjectName}-${Env}-InternetGateway01-id

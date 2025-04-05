@@ -1,0 +1,14 @@
+{
+    "Parameters": {
+      "ProjectName": "CICD",
+      "Env": "Test",
+      "VpcCidr": "10.0.0.0/16",
+      "AvailabilityZone1a": "ap-northeast-1a",
+      "AvailabilityZone1c": "ap-northeast-1c",
+      "PublicSubnet1aCidr": "10.0.2.0/24",
+      "PublicSubnet1cCidr": "10.0.3.0/24",
+      "PrivateSubnet1aCidr": "10.0.0.0/24",
+      "PrivateSubnet1cCidr": "10.0.1.0/24"
+    }
+  }
+  

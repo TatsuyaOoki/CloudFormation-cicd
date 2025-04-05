@@ -1,0 +1,3 @@
+# CloudFormationのCI/CD確認用リポジトリ
+
+CodePipelineを使用したCloudFormationのCI/CD環境

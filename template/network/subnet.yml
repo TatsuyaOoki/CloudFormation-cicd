@@ -1,0 +1,171 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Subnet resource
+Parameters:
+
+  ProjectName:
+    Type: String
+    Description: ProjectName
+  Env:
+    Type: String
+    Description: Prod or Test or Dev
+  AvailabilityZone1a:
+    Type: AWS::EC2::AvailabilityZone::Name
+    Description: AZ of Subnet1a
+  AvailabilityZone1c:
+    Type: AWS::EC2::AvailabilityZone::Name
+    Description: AZ of Subnet1c
+  PublicSubnet1aCidr:
+    Type: String
+    Description: PublicSubnet1a Cidr
+  PublicSubnet1cCidr:
+    Type: String
+    Description: PublicSubnet1c Cidr
+  PrivateSubnet1aCidr:
+    Type: String
+    Description: PrivateSubnet1a Cidr
+  PrivateSubnet1cCidr:
+    Type: String
+    Description: PrivateSubnet1c Cidr
+
+Resources:
+
+##############################
+# Subnet
+##############################
+
+  PrivateSubnet1a:
+    Type: AWS::EC2::Subnet
+    Properties: 
+      AssignIpv6AddressOnCreation: !Ref AWS::NoValue
+      AvailabilityZone: !Ref AvailabilityZone1a
+      AvailabilityZoneId: !Ref AWS::NoValue
+      CidrBlock: !Ref PrivateSubnet1aCidr
+      EnableDns64: !Ref AWS::NoValue
+      Ipv6CidrBlock: !Ref AWS::NoValue
+      Ipv6Native: !Ref AWS::NoValue
+      MapPublicIpOnLaunch: !Ref AWS::NoValue
+      OutpostArn: !Ref AWS::NoValue
+      PrivateDnsNameOptionsOnLaunch: !Ref AWS::NoValue
+      VpcId: {Fn::ImportValue: !Sub "${ProjectName}-${Env}-MyVPC-Id"}
+      Tags: 
+        - Key: Name
+          Value: !Sub ${ProjectName}-${Env}-PravateSubnet-1a
+
+
+  PrivateSubnet1c:
+    Type: AWS::EC2::Subnet
+    Properties: 
+      AssignIpv6AddressOnCreation: !Ref AWS::NoValue
+      AvailabilityZone: !Ref AvailabilityZone1c
+      AvailabilityZoneId: !Ref AWS::NoValue
+      CidrBlock: !Ref PrivateSubnet1cCidr
+      EnableDns64: !Ref AWS::NoValue
+      Ipv6CidrBlock: !Ref AWS::NoValue
+      Ipv6Native: !Ref AWS::NoValue
+      MapPublicIpOnLaunch: !Ref AWS::NoValue
+      OutpostArn: !Ref AWS::NoValue
+      PrivateDnsNameOptionsOnLaunch: !Ref AWS::NoValue
+      VpcId: {Fn::ImportValue: !Sub "${ProjectName}-${Env}-MyVPC-Id"}
+      Tags: 
+        - Key: Name
+          Value: !Sub ${ProjectName}-${Env}-PravateSubnet-1c
+
+  PublicSubnet1a:
+    Type: AWS::EC2::Subnet
+    Properties: 
+      AssignIpv6AddressOnCreation: !Ref AWS::NoValue
+      AvailabilityZone: !Ref AvailabilityZone1a
+      AvailabilityZoneId: !Ref AWS::NoValue
+      CidrBlock: !Ref PublicSubnet1aCidr
+      EnableDns64: !Ref AWS::NoValue
+      Ipv6CidrBlock: !Ref AWS::NoValue
+      Ipv6Native: !Ref AWS::NoValue
+      MapPublicIpOnLaunch: !Ref AWS::NoValue
+      OutpostArn: !Ref AWS::NoValue
+      PrivateDnsNameOptionsOnLaunch: !Ref AWS::NoValue
+      VpcId: {Fn::ImportValue: !Sub "${ProjectName}-${Env}-MyVPC-Id"}
+      Tags: 
+        - Key: Name
+          Value: !Sub ${ProjectName}-${Env}-PublicSubnet-1a
+
+  PublicSubnet1c:
+    Type: AWS::EC2::Subnet
+    Properties: 
+      AssignIpv6AddressOnCreation: !Ref AWS::NoValue
+      AvailabilityZone: !Ref AvailabilityZone1c
+      AvailabilityZoneId: !Ref AWS::NoValue
+      CidrBlock: !Ref PublicSubnet1cCidr
+      EnableDns64: !Ref AWS::NoValue
+      Ipv6CidrBlock: !Ref AWS::NoValue
+      Ipv6Native: !Ref AWS::NoValue
+      MapPublicIpOnLaunch: !Ref AWS::NoValue
+      OutpostArn: !Ref AWS::NoValue
+      PrivateDnsNameOptionsOnLaunch: !Ref AWS::NoValue
+      VpcId: {Fn::ImportValue: !Sub "${ProjectName}-${Env}-MyVPC-Id"}
+      Tags: 
+        - Key: Name
+          Value: !Sub ${ProjectName}-${Env}-PublicSubnet-1c
+
+
+##############################
+# Route Table
+##############################
+
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: {Fn::ImportValue: !Sub "${ProjectName}-${Env}-MyVPC-Id"}
+      Tags: 
+        - Key: Name
+          Value: !Sub ${ProjectName}-${Env}-PublicRouteTable
+
+  PublicRoute01:
+    Type: AWS::EC2::Route
+    Properties:
+      CarrierGatewayId: !Ref AWS::NoValue
+      DestinationCidrBlock: 0.0.0.0/0
+      DestinationIpv6CidrBlock: !Ref AWS::NoValue
+      EgressOnlyInternetGatewayId: !Ref AWS::NoValue
+      GatewayId: { Fn::ImportValue: !Sub "${ProjectName}-${Env}-InternetGateway01-id" }
+      InstanceId: !Ref AWS::NoValue
+      LocalGatewayId: !Ref AWS::NoValue
+      NatGatewayId: !Ref AWS::NoValue
+      NetworkInterfaceId: !Ref AWS::NoValue
+      RouteTableId: !Ref PublicRouteTable
+      TransitGatewayId: !Ref AWS::NoValue
+      VpcEndpointId: !Ref AWS::NoValue
+      VpcPeeringConnectionId: !Ref AWS::NoValue
+
+##############################
+# SubnetRouteTableAssociation
+##############################
+
+  PbulicSubnetRouteTableAssociation01:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet1a
+      RouteTableId: !Ref PublicRouteTable
+
+  PbulicSubnetRouteTableAssociation02:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet1c
+      RouteTableId: !Ref PublicRouteTable
+
+Outputs:
+  PrivateSubnet1aId:
+    Value: !Ref PrivateSubnet1a
+    Export:
+      Name: !Sub ${ProjectName}-${Env}-PrivateSubnet1a-Id
+  PrivateSubnet1cId:
+    Value: !Ref PrivateSubnet1c
+    Export:
+      Name: !Sub ${ProjectName}-${Env}-PrivateSubnet1c-Id
+  PublicSubnet1aId:
+    Value: !Ref PublicSubnet1a
+    Export:
+      Name: !Sub ${ProjectName}-${Env}-PublicSubnet1a-Id
+  PublicSubnet1cId:
+    Value: !Ref PublicSubnet1c
+    Export:
+      Name: !Sub ${ProjectName}-${Env}-PublicSubnet1c-Id

@@ -1,0 +1,37 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: VPC resource
+Parameters:
+  ProjectName:
+    Type: String
+    Description: ProjectName
+  Env:
+    Type: String
+    Description: Prod or Test or Dev
+  VpcCidr:
+    Type: String
+    Description: VPC Cidr
+
+Resources:
+
+##############################
+# VPC
+##############################
+
+  MyVPC:
+    Type: AWS::EC2::VPC
+    Properties: 
+      CidrBlock: !Ref VpcCidr
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+      InstanceTenancy: default
+      Tags: 
+        - Key: Name
+          Value: !Sub ${ProjectName}-${Env}-VPC
+
+
+Outputs:
+  MyVPCId:
+    Description: The ID of the VPC
+    Value: !Ref MyVPC
+    Export:
+      Name: !Sub ${ProjectName}-${Env}-MyVPC-Id

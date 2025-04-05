@@ -1,0 +1,23 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.8
+  build:
+    commands:
+      - echo Validating all templates in ./template directory...
+      - |
+        set -ueo pipefail
+        for file in $(find template/ -type f -name "*.yml" -o -name "*.yaml"); do
+          echo "Validating $file"
+          aws cloudformation validate-template --template-body "file://$file"
+        done
+      - echo Packaging main template...
+      - aws cloudformation package \
+          --template-file template/main.yml \
+          --s3-bucket $TEMPLATE_BUCKET \
+          --output-template-file packaged-template.yml
+artifacts:
+  files:
+    - packaged-template.yml

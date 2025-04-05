@@ -1,0 +1,126 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Root Stack
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      -
+        Label:
+          default: Environment
+        Parameters:
+          - ProjectName
+          - Env
+          # - CFnS3BucketName
+      -
+        Label:
+          default: Network
+        Parameters:
+          - VpcCidr
+          - AvailabilityZone1a
+          - AvailabilityZone1c
+          - PublicSubnet1aCidr
+          - PublicSubnet1cCidr
+          - PrivateSubnet1aCidr
+          - PrivateSubnet1cCidr
+
+Parameters:
+
+  ProjectName:
+    Type: String
+    Description: ProjectName
+  Env:
+    Type: String
+    Description: Prod or Test or Dev
+    Default: Prod
+    AllowedValues:
+      - Prod
+      - Test
+      - Dev
+  VpcCidr:
+    Type: String
+    Description: VPC Cidr
+    Default: 10.0.0.0/16
+    AllowedPattern: (\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})
+    ConstraintDescription: must be a valid IP CIDR range of the form x.x.x.x/x.
+  AvailabilityZone1a:
+    Type: AWS::EC2::AvailabilityZone::Name
+    Description: AZ of Subnet1a
+    Default: ap-northeast-1a
+  AvailabilityZone1c:
+    Type: AWS::EC2::AvailabilityZone::Name
+    Description: AZ of Subnet1c
+    Default: ap-northeast-1c
+  PublicSubnet1aCidr:
+    Type: String
+    Description: PublicSubnet1a Cidr
+    Default: 10.0.2.0/24
+    AllowedPattern: (\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})
+  PublicSubnet1cCidr:
+    Type: String
+    Description: PublicSubnet1c Cidr
+    Default: 10.0.3.0/24
+    AllowedPattern: (\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})
+  PrivateSubnet1aCidr:
+    Type: String
+    Description: PrivateSubnet1a Cidr
+    Default: 10.0.0.0/24
+    AllowedPattern: (\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})
+  PrivateSubnet1cCidr:
+    Type: String
+    Description: PrivateSubnet1c Cidr
+    Default: 10.0.1.0/24
+    AllowedPattern: (\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})
+  # CFnS3BucketName:
+  #   Type: String
+  #   Description: S3bucket name that stores cloudformation templates
+  #   Default: s3-bucket-name
+
+Resources:
+
+  VpcStack:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties: 
+      TemplateURL: ./network/vpc.yml
+      Parameters:
+        ProjectName: !Ref ProjectName
+        Env: !Ref Env
+        VpcCidr: !Ref VpcCidr
+      Tags: 
+        - Key: Name
+          Value: !Sub ${ProjectName}-${Env}-VPCStack
+
+  GatewayStack:
+    Type: AWS::CloudFormation::Stack
+    DependsOn: VpcStack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties: 
+      TemplateURL: ./network/gateway.yml
+      Parameters:
+        ProjectName: !Ref ProjectName
+        Env: !Ref Env
+      Tags: 
+        - Key: Name
+          Value: !Sub ${ProjectName}-${Env}-GatewayStack
+
+  SubnetStack:
+    Type: AWS::CloudFormation::Stack
+    DependsOn: GatewayStack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties: 
+      TemplateURL: ./network/subnet.yml
+      Parameters:
+        ProjectName: !Ref ProjectName
+        Env: !Ref Env
+        AvailabilityZone1a: !Ref AvailabilityZone1a
+        AvailabilityZone1c: !Ref AvailabilityZone1c
+        PublicSubnet1aCidr: !Ref PublicSubnet1aCidr
+        PublicSubnet1cCidr: !Ref PublicSubnet1cCidr
+        PrivateSubnet1aCidr: !Ref PrivateSubnet1aCidr
+        PrivateSubnet1cCidr: !Ref PrivateSubnet1cCidr
+      Tags: 
+        - Key: Name
+          Value: !Sub ${ProjectName}-${Env}-SubnetStack
