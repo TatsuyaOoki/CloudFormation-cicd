@@ -193,6 +193,7 @@ Resources:
         - Name: Deploy
           Actions:
             - Name: CreateChangeSet
+              RoleArn: !GetAtt PipelineRole.Arn
               ActionTypeId:
                 Category: Deploy
                 Owner: AWS
