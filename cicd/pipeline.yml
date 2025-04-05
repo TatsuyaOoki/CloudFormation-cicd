@@ -193,7 +193,6 @@ Resources:
         - Name: Deploy
           Actions:
             - Name: CreateChangeSet
-              RoleArn: !GetAtt PipelineRole.Arn
               ActionTypeId:
                 Category: Deploy
                 Owner: AWS
@@ -208,6 +207,7 @@ Resources:
                 TemplatePath: BuildOutput::cicd/packaged-template.yml
                 Capabilities: CAPABILITY_NAMED_IAM
                 TemplateConfiguration: !Sub "BuildOutput::${StackConfigFile}"
+                RoleArn: !GetAtt PipelineRole.Arn
               RunOrder: 1
 
 Outputs:
