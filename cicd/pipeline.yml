@@ -206,7 +206,7 @@ Resources:
                 StackName: !Ref StackName
                 TemplatePath: BuildOutput::cicd/packaged-template.yml
                 Capabilities: CAPABILITY_NAMED_IAM
-                TemplateConfiguration: !Sub "BuildOutput::${StackConfigFile}"
+                TemplateConfiguration: !Sub "BuildOutput::cicd/${StackConfigFile}"
                 RoleArn: !GetAtt PipelineRole.Arn
               RunOrder: 1
 
