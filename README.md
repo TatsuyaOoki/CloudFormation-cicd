@@ -17,3 +17,4 @@ CodePipelineを使用したCloudFormationのCI/CD環境
 - 現状、templateがネスト構造の場合は、ネストされた子スタックに対して変更セットが作成されない。</br>
 ネストされた子スタックに対して、変更セットを有効にするには以下のURLを参考に設定を実施するとよさそう</br>
 [CI/CD配下でネストされたスタックの子スタックに対して、変更セットを有効にするテクニック](https://blog.usize-tech.com/aws-cfn-cicd-nestedstack-changeset/)
+- テストにはtemplateの構文検証とcfn-guardを使用した設定値確認を実施
