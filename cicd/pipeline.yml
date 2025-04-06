@@ -273,7 +273,6 @@ Resources:
                 RoleArn: !GetAtt PipelineRole.Arn
               RunOrder: 1
 
-
             - Name: Approval
               ActionTypeId:
                 Category: Approval
