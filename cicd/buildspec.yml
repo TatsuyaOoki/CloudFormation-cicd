@@ -5,6 +5,10 @@ phases:
   install:
     runtime-versions:
       python: 3.8
+    commands:
+      - curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/aws-cloudformation/cloudformation-guard/main/install-guard.sh | sh
+      - export PATH=~/.guard/bin:$PATH
+      - cfn-guard --version
   build:
     commands:
       - echo Validating all templates in ./template directory...
@@ -14,6 +18,8 @@ phases:
         for file in $files; do
           echo "Validating $file"
           aws cloudformation validate-template --template-body "file://$file"
+          echo "Running cfn-guard ruleset on $file"
+          cfn-guard validate ---rules ${CICD_WORK_DIR}/${CFN_RULESET_FILE} --data $file --show-summary all
         done
       - echo Packaging main template...
       - |
@@ -25,4 +31,4 @@ phases:
 artifacts:
   files:
     - packaged-template.yml
-    - cicd/$PARAMETER_FILE
+    - ${CICD_WORK_DIR}/$PARAMETER_FILE

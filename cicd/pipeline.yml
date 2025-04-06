@@ -202,6 +202,12 @@ Resources:
              - Name: PARAMETER_FILE
                Type: PLAINTEXT
                Value: !Ref StackConfigFile
+             - Name: CFN_RULESET_FILE
+               Type: PLAINTEXT
+               Value: check-rules.guard
+             - Name: CICD_WORK_DIR
+               Type: PLAINTEXT
+               Value: cicd
       Source:
         Type: CODEPIPELINE
         BuildSpec: cicd/buildspec.yml

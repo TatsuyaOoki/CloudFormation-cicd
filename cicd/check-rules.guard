@@ -1,0 +1,35 @@
+## VPC
+
+let aws_vpc_resources = Resources.*[ Type == 'AWS::EC2::VPC' ]
+rule aws_vpc when %aws_vpc_resources !empty {
+  %aws_vpc_resources.Properties.InstanceTenancy == "default"
+  %aws_vpc_resources.Properties.EnableDnsSupport == true
+  %aws_vpc_resources.Properties.EnableDnsHostnames == true
+}
+
+## Subnet
+
+let aws_public_subnet_resources = Resources.*[
+  Type == "AWS::EC2::Subnet"
+  Properties.Tags.*.Key == "Name"
+  Properties.Tags.*.Value == /.*Public.*/
+]
+rule aws_public_subnet when %aws_public_subnet_resources !empty {
+  %aws_public_subnet_resources.Properties.MapPublicIpOnLaunch == true
+}
+
+let aws_public_route_resources = Resources.*[ 
+    Type == "AWS::EC2::Route"
+    Properties.DestinationCidrBlock == "0.0.0.0/0"
+]
+rule aws_public_route when %aws_public_route_resources !empty {
+  %aws_public_route_resources[*].Properties.GatewayId exists
+}
+
+let aws_private_subnet_resources = Resources.*[ 
+  Properties.Tags.*.Key == "Name"
+  Properties.Tags.*.Value == /.*Private.*/
+]
+rule aws_private_subnet when %aws_private_subnet_resources !empty {
+  %aws_private_subnet_resources.Properties.MapPublicIpOnLaunch == false
+}
