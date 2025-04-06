@@ -19,7 +19,7 @@ phases:
           echo "Validating $file"
           aws cloudformation validate-template --template-body "file://$file"
           echo "Running cfn-guard ruleset on $file"
-          cfn-guard validate ---rules ${CICD_WORK_DIR}/${CFN_RULESET_FILE} --data $file --show-summary all
+          cfn-guard validate --rules ${CICD_WORK_DIR}/${CFN_RULESET_FILE} --data $file --show-summary all
         done
       - echo Packaging main template...
       - |
