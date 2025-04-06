@@ -84,6 +84,16 @@ Resources:
                 - Name
 
 ##############################
+# SNS Topic
+##############################
+
+  ApprovalTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: ApprovalTopic
+      TopicName: !Sub "${ProjectName}-${Env}-approval-topic"
+
+##############################
 # IAM Role
 ##############################
   PipelineRole:
@@ -124,6 +134,8 @@ Resources:
                   - "codebuild:BatchGetBuilds"
                   - "codebuild:StartBuild"
                   - "codebuild:StopBuild"
+                  - "sns:Publish"
+                  - "ec2:*"
                 Resource: "*"
 
   CodeBuildRole:
@@ -268,6 +280,13 @@ Resources:
                 Owner: AWS
                 Provider: Manual
                 Version: "1"
+              Configuration:
+                NotificationArn: !Ref ApprovalTopic
+                CustomData: !Sub |
+                  【承認依頼】
+                  プロジェクト：${ProjectName}
+                  環境：${Env}
+                  以下のURLから変更内容を確認し、承認ください。
               RunOrder: 2
 
             - Name: ExecuteChangeSet
