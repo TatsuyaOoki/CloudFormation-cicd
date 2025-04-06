@@ -282,11 +282,12 @@ Resources:
                 Version: "1"
               Configuration:
                 NotificationArn: !Ref ApprovalTopic
+                ExternalEntityLink: !Sub "https://${AWS::Region}.console.aws.amazon.com/cloudformation/home?region=${AWS::Region}#/stacks/stackinfo?stackId=${StackName}"
                 CustomData: !Sub |
-                  【承認依頼】
+                  承認依頼
                   プロジェクト：${ProjectName}
                   環境：${Env}
-                  以下のURLから変更内容を確認し、承認ください。
+                  上部のURLから変更内容を確認し、承認ください。
               RunOrder: 2
 
             - Name: ExecuteChangeSet

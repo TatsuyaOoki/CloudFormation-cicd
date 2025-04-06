@@ -18,7 +18,7 @@ Resources:
     Properties: 
       Tags: 
         - Key: Name
-          Value: !Sub ${ProjectName}-${Env}-InternetGateway
+          Value: !Sub ${ProjectName}-${Env}-InternetGateway01
 
 
 ##############################
