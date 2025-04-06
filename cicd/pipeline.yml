@@ -288,6 +288,7 @@ Resources:
                   プロジェクト：${ProjectName}
                   環境：${Env}
                   上部のURLから変更内容を確認し、承認ください。
+              TimeoutInMinutes: 300
               RunOrder: 2
 
             - Name: ExecuteChangeSet
