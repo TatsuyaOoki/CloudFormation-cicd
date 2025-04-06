@@ -304,6 +304,20 @@ Resources:
                 StackName: !Ref StackName
                 RoleArn: !GetAtt PipelineRole.Arn
               RunOrder: 3
+      Triggers:
+           - ProviderType: CodeStarSourceConnection
+             GitConfiguration:
+                  SourceActionName: GitHub_source
+                  Push:
+                    - Branches:
+                        Includes:
+                             - main
+                      FilePaths:
+                        Includes:
+                             - template/*
+                             - cicd/*
+                      
+                           
 
 Outputs:
   BuildProjectName:
