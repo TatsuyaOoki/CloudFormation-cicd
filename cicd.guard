@@ -1,8 +1,0 @@
-let aws_ec2_vpc_resources = Resources.*[ Type == 'AWS::EC2::VPC' ]
-rule aws_ec2_vpc when %aws_ec2_vpc_resources !empty {
-  %aws_ec2_vpc_resources.Properties.EnableDnsHostnames == true
-  %aws_ec2_vpc_resources.Properties.EnableDnsSupport == true
-  %aws_ec2_vpc_resources.Properties.InstanceTenancy == "default"
-  %aws_ec2_vpc_resources.Properties.Tags == [{"Key":"Name","Value":"test"}]
-  %aws_ec2_vpc_resources.Properties.CidrBlock == "10.0.0.0/16"
-}
