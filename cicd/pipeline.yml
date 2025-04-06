@@ -322,8 +322,8 @@ Resources:
                         Includes:
                              - template/*
                              - cicd/*
-                      
-                           
+                        Excludes:
+                             - cicd/pipeline.yml
 
 Outputs:
   BuildProjectName:
