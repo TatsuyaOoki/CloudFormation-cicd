@@ -28,7 +28,6 @@ phases:
       #     --s3-bucket $TEMPLATE_BUCKET \
       #     --output-template-file packaged-template.yml
 artifacts:
+  base-directory: template
   files:
-    # - packaged-template.yml
-    - ${CICD_WORK_DIR}/$PARAMETER_FILE
-    - template/**
+    - '**/*'
