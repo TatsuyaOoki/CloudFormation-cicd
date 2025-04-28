@@ -261,55 +261,19 @@ Resources:
 
         - Name: Deploy
           Actions:
-            - Name: CreateChangeSet
+            - Name: S3Deploy
               ActionTypeId:
                 Category: Deploy
                 Owner: AWS
-                Provider: CloudFormation
+                Provider: S3
                 Version: "1"
               InputArtifacts:
                 - Name: BuildOutput
               Configuration:
-                ActionMode: CHANGE_SET_REPLACE
-                ChangeSetName: !Sub "${ProjectName}-${Env}-ChangeSet"
-                StackName: !Ref StackName
-                TemplatePath: BuildOutput::packaged-template.yml
-                Capabilities: CAPABILITY_NAMED_IAM
-                TemplateConfiguration: !Sub "BuildOutput::cicd/${StackConfigFile}"
-                RoleArn: !GetAtt PipelineRole.Arn
+                BucketName: !Ref TemplateBucket
+                Extract: true
               RunOrder: 1
 
-            - Name: Approval
-              ActionTypeId:
-                Category: Approval
-                Owner: AWS
-                Provider: Manual
-                Version: "1"
-              Configuration:
-                NotificationArn: !Ref ApprovalTopic
-                ExternalEntityLink: !Sub "https://${AWS::Region}.console.aws.amazon.com/cloudformation/home?region=${AWS::Region}#/stacks/stackinfo?stackId=${StackName}"
-                CustomData: !Sub |
-                  承認依頼
-                  プロジェクト：${ProjectName}
-                  環境：${Env}
-                  上部のURLから変更内容を確認し、承認ください。
-              TimeoutInMinutes: 300
-              RunOrder: 2
-
-            - Name: ExecuteChangeSet
-              ActionTypeId:
-                Category: Deploy
-                Owner: AWS
-                Provider: CloudFormation
-                Version: "1"
-              InputArtifacts:
-                - Name: BuildOutput
-              Configuration:
-                ActionMode: CHANGE_SET_EXECUTE
-                ChangeSetName: !Sub "${ProjectName}-${Env}-ChangeSet"
-                StackName: !Ref StackName
-                RoleArn: !GetAtt PipelineRole.Arn
-              RunOrder: 3
       Triggers:
            - ProviderType: CodeStarSourceConnection
              GitConfiguration:
