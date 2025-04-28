@@ -37,10 +37,10 @@ Parameters:
     Type: String
     NoEcho: true
     Description: CodeConnectionArn
-  StackConfigFile:
+  TemplateBucket:
     Type: String
-    Description: Name of the file in which the stack parameters are defined
-    Default: param.dev.json
+    Description: S3 bucket name for CFn storage
+    Default: my-s3bucket-name
 
 Mappings:
   EnvMap:
@@ -67,17 +67,17 @@ Resources:
                 - Ref: Env
                 - Name
 
-  TemplateBucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      BucketName:
-        Fn::Sub:
-          - "${ProjectName}-${EnvLower}-template-${AWS::AccountId}"
-          - EnvLower:
-              Fn::FindInMap:
-                - EnvMap
-                - Ref: Env
-                - Name
+  # TemplateBucket:
+  #   Type: AWS::S3::Bucket
+  #   Properties:
+  #     BucketName:
+  #       Fn::Sub:
+  #         - "${ProjectName}-${EnvLower}-template-${AWS::AccountId}"
+  #         - EnvLower:
+  #             Fn::FindInMap:
+  #               - EnvMap
+  #               - Ref: Env
+  #               - Name
 
 ##############################
 # SNS Topic
@@ -195,9 +195,6 @@ Resources:
              - Name: TEMPLATE_BUCKET
                Type: PLAINTEXT
                Value: !Ref TemplateBucket
-             - Name: PARAMETER_FILE
-               Type: PLAINTEXT
-               Value: !Ref StackConfigFile
              - Name: CFN_RULESET_FILE
                Type: PLAINTEXT
                Value: check-rules.guard
@@ -269,24 +266,6 @@ Resources:
                 BucketName: !Ref TemplateBucket
                 Extract: true
               RunOrder: 1
-
-            - Name: CreateChangeSet
-              ActionTypeId:
-                Category: Deploy
-                Owner: AWS
-                Provider: CloudFormation
-                Version: "1"
-              InputArtifacts:
-                - Name: BuildOutput
-              Configuration:
-                ActionMode: CHANGE_SET_REPLACE
-                ChangeSetName: !Sub "${ProjectName}-${Env}-ChangeSet"
-                StackName: !Sub "${ProjectName}-${Env}-Stack"
-                TemplatePath: !Sub https://${TemplateBucket.RegionalDomainName}/template/main.yml
-                Capabilities: CAPABILITY_NAMED_IAM
-                TemplateConfiguration: !Sub "BuildOutput::cicd/${StackConfigFile}"
-                RoleArn: !GetAtt PipelineRole.Arn
-              RunOrder: 2
 
       Triggers:
            - ProviderType: CodeStarSourceConnection

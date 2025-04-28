@@ -30,5 +30,5 @@ phases:
 artifacts:
   files:
     # - packaged-template.yml
-    - ${CICD_WORK_DIR}/$PARAMETER_FILE
+    # - ${CICD_WORK_DIR}/$PARAMETER_FILE
     - template/**/*
