@@ -270,6 +270,24 @@ Resources:
                 Extract: true
               RunOrder: 1
 
+            - Name: CreateChangeSet
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Provider: CloudFormation
+                Version: "1"
+              InputArtifacts:
+                - Name: BuildOutput
+              Configuration:
+                ActionMode: CHANGE_SET_REPLACE
+                ChangeSetName: !Sub "${ProjectName}-${Env}-ChangeSet"
+                StackName: !Sub "${ProjectName}-${Env}-Stack"
+                TemplatePath: !Sub https://${TemplateBucket.DomainName}.s3.ap-northeast-1.amazonaws.com/template/main.yml
+                Capabilities: CAPABILITY_NAMED_IAM
+                TemplateConfiguration: !Sub "BuildOutput::cicd/${StackConfigFile}"
+                RoleArn: !GetAtt PipelineRole.Arn
+              RunOrder: 2
+
       Triggers:
            - ProviderType: CodeStarSourceConnection
              GitConfiguration:
