@@ -21,13 +21,14 @@ phases:
           echo "Running cfn-guard ruleset on $file"
           cfn-guard validate --rules ${CICD_WORK_DIR}/${CFN_RULESET_FILE} --data $file --show-summary all
         done
-      - echo Packaging main template...
-      - |
-        aws cloudformation package \
-          --template-file template/main.yml \
-          --s3-bucket $TEMPLATE_BUCKET \
-          --output-template-file packaged-template.yml
+      # - echo Packaging main template...
+      # - |
+      #   aws cloudformation package \
+      #     --template-file template/main.yml \
+      #     --s3-bucket $TEMPLATE_BUCKET \
+      #     --output-template-file packaged-template.yml
 artifacts:
   files:
-    - packaged-template.yml
+    # - packaged-template.yml
     - ${CICD_WORK_DIR}/$PARAMETER_FILE
+    - template/**

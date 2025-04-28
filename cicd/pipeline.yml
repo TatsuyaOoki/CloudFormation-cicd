@@ -12,7 +12,6 @@ Metadata:
           - GitHubOwner
           - GitHubRepo
           - connectionArn
-          - StackName
 Parameters:
   ProjectName:
     Type: String
@@ -38,9 +37,6 @@ Parameters:
     Type: String
     NoEcho: true
     Description: CodeConnectionArn
-  StackName:
-    Type: String
-    Description: Name of the CloudFormation stack to be deployed
   StackConfigFile:
     Type: String
     Description: Name of the file in which the stack parameters are defined
