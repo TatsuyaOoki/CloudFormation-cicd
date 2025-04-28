@@ -280,7 +280,7 @@ Resources:
                              - main
                       FilePaths:
                         Includes:
-                             - template/*
+                             - template/**
                              - cicd/*
                         Excludes:
                              - cicd/pipeline.yml
